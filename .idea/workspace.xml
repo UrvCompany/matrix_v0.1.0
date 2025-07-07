@@ -5,30 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7dabc10b-7819-4445-9d2c-2b49ea6a8f7c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FirstStand/FirstStand/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/FirstStand/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/FirstStand/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/FirstStand/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/FirstStand/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/db.sqlite3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/static/main/css/main.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/templates/main/about.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/templates/main/layout.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/templates/main/matrix_rain.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/main/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/manage.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FirstStand/test_animation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Django_stand.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Django_stand.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +22,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/FirstStand" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -59,7 +38,7 @@
     "Python.test_animation.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/Konstantin/PycharmProjects/Django_stand",
     "settings.editor.selected.configurable": "File.Encoding"
   }
