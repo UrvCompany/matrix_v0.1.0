@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Rain with Realistic Lightning</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #lightning-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <canvas id="lightningCanvas"></canvas>
+    <div id="lightning-flash"></div>
+
+    <script>
+        class MatrixLetters {
+            constructor(app) {
+                this.app = app;
+                this.letters = [];
+                for (let i = 0; i < 96; i++) {
+                    this.letters.push(String.fromCharCode(0x30A0 + i));
+                }
+                this.letters.push(...'0123456789');
+                this.base_font_size = 15;
+                this.columns = Math.floor(this.app.width / (this.base_font_size * 1.5));
+
+                this.drops = Array.from({length: this.columns}, () => ({
+                    position: Math.floor(Math.random() * this.app.height / this.base_font_size),
+                    speed: Math.random() * 0.8 + 0.6,
+                    resetThreshold: 0.96 + Math.random() * 0.02,
+                    fontVariation: 0.5 + Math.random(),
+                    currentFont: this.base_font_size,
+                    active: Math.random() > 0.3
+                }));
+
+                // Настройки молнии
+                this.lightningChance = 0.0025;
+                this.lightningActive = false;
+                this.lightningFlash = document.getElementById('lightning-flash');
+                this.lightningCtx = document.getElementById('lightningCanvas').getContext('2d');
+                this.lightningSegments = [];
+                this.lightningTimer = 0;
+            }
+
+            draw() {
+                const ctx = this.app.ctx;
+
+                // Отрисовка матричного дождя
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+                ctx.fillRect(0, 0, this.app.width, this.app.height);
+                ctx.fillStyle = '#00FF00';
+
+                for (let i = 0; i < this.drops.length; i++) {
+                    const drop = this.drops[i];
+
+                    if (!drop.active && Math.random() > 0.92) {
+                        drop.active = true;
+                        drop.position = 0;
+                    }
+
+                    if (!drop.active) continue;
+
+                    const char = this.letters[Math.floor(Math.random() * this.letters.length)];
+                    const x = i * this.base_font_size * 1.5;
+                    const y = (drop.position - 1) * this.base_font_size;
+
+                    drop.currentFont = this.base_font_size * drop.fontVariation;
+                    ctx.font = `bold ${drop.currentFont}px 'Courier New', monospace`;
+                    ctx.fillText(char, x, y);
+
+                    if (drop.position * this.base_font_size > this.app.height && Math.random() > drop.resetThreshold) {
+                        drop.position = 0;
+                        drop.active = Math.random() > 0.1;
+                    }
+
+                    drop.position += drop.speed;
+                }
+
+                // Обработка молнии
+                if (!this.lightningActive && Math.random() < this.lightningChance) {
+                    this.generateLightning();
+                }
+
+                // Отрисовка молнии, если активна
+                if (this.lightningActive) {
+                    this.drawLightning();
+                }
+            }
+
+            generateLightning() {
+                this.lightningActive = true;
+                this.lightningTimer = 0;
+                this.lightningSegments = [];
+
+                // Начальная точка молнии (вверху экрана)
+                const startX = Math.random() * this.app.width;
+                const endX = startX + (Math.random() * 200 - 100);
+                const endY = this.app.height;
+
+                // Создаем основную ветвь молнии
+                this.createLightningBranch(startX, 0, endX, endY, 5);
+
+                // Создаем несколько побочных ветвей
+                const branchCount = 3 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < branchCount; i++) {
+                    const branchPoint = Math.random();
+                    const bx = startX + (endX - startX) * branchPoint;
+                    const by = endY * branchPoint;
+                    const bend = 50 + Math.random() * 100;
+                    this.createLightningBranch(
+                        bx, by,
+                        bx + (Math.random() * bend - bend/2),
+                        by + 50 + Math.random() * 100,
+                        2
+                    );
+                }
+
+                // Активируем вспышку
+                this.lightningFlash.style.opacity = '0.5';
+                setTimeout(() => {
+                    this.lightningFlash.style.opacity = '0.2';
+                    setTimeout(() => {
+                        this.lightningFlash.style.opacity = '0';
+                    }, 100);
+                }, 50);
+            }
+
+            createLightningBranch(x1, y1, x2, y2, thickness) {
+                const segments = [];
+                const segmentCount = 10 + Math.floor(Math.random() * 15);
+                const dx = (x2 - x1) / segmentCount;
+                const dy = (y2 - y1) / segmentCount;
+
+                let prevX = x1;
+                let prevY = y1;
+
+                for (let i = 1; i <= segmentCount; i++) {
+                    const x = x1 + dx * i + (Math.random() * 20 - 10);
+                    const y = y1 + dy * i + (Math.random() * 20 - 10);
+
+                    segments.push({
+                        x1: prevX, y1: prevY,
+                        x2: x, y2: y,
+                        thickness: thickness * (1 - i/segmentCount/2),
+                        alpha: 1 - i/segmentCount/3
+                    });
+
+                    prevX = x;
+                    prevY = y;
+                }
+
+                this.lightningSegments.push(...segments);
+            }
+
+            drawLightning() {
+                this.lightningCtx.clearRect(0, 0, this.app.width, this.app.height);
+                this.lightningCtx.lineCap = 'round';
+                this.lightningCtx.lineJoin = 'round';
+
+                for (const segment of this.lightningSegments) {
+                    this.lightningCtx.beginPath();
+                    this.lightningCtx.moveTo(segment.x1, segment.y1);
+                    this.lightningCtx.lineTo(segment.x2, segment.y2);
+                    this.lightningCtx.strokeStyle = `rgba(200, 230, 255, ${segment.alpha})`;
+                    this.lightningCtx.lineWidth = segment.thickness;
+                    this.lightningCtx.stroke();
+                }
+
+                this.lightningTimer++;
+                if (this.lightningTimer > 10) {
+                    this.lightningActive = false;
+                    this.lightningCtx.clearRect(0, 0, this.app.width, this.app.height);
+                }
+            }
+
+            run() {
+                this.draw();
+            }
+        }
+
+        class MatrixApp {
+            constructor() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+
+                this.canvas = document.getElementById('matrixCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+
+                const lightningCanvas = document.getElementById('lightningCanvas');
+                lightningCanvas.width = this.width;
+                lightningCanvas.height = this.height;
+
+                this.matrixLetters = new MatrixLetters(this);
+                this.lastTime = 0;
+                this.fps = 35;
+                this.fpsInterval = 1000 / this.fps;
+            }
+
+            draw() {
+                this.matrixLetters.run();
+            }
+
+            run(currentTime) {
+                requestAnimationFrame((time) => this.run(time));
+
+                const elapsed = currentTime - this.lastTime;
+                if (elapsed > this.fpsInterval) {
+                    this.lastTime = currentTime - (elapsed % this.fpsInterval);
+                    this.draw();
+                }
+            }
+        }
+
+        window.onload = () => {
+            const app = new MatrixApp();
+            app.run(0);
+
+            window.addEventListener('resize', () => {
+                app.width = window.innerWidth;
+                app.height = window.innerHeight;
+                app.canvas.width = app.width;
+                app.canvas.height = app.height;
+
+                const lightningCanvas = document.getElementById('lightningCanvas');
+                lightningCanvas.width = app.width;
+                lightningCanvas.height = app.height;
+
+                app.matrixLetters = new MatrixLetters(app);
+            });
+        };
+    </script>
+</body>
+</html>
