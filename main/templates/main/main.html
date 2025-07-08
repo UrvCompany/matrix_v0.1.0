@@ -1,12 +1,20 @@
 {% extends 'main/layout.html' %}
 
-{% block title %} Про нас {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% block content %}
     <div class="features">
-        <h1>Главная страница</h1>
+        <h1>{{ title }}</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores doloremque laborum qui repellendus? Cum doloremque esse in necessitatibus nobis placeat quaerat quia saepe similique sint. Delectus dicta omnis similique voluptate.</p>
         <button class="btn btn-warning"> На страницу про нас </button>
+
+        {% for el in values %}
+            {% if el != 'nigga' %}
+               <p>{{ el|upper }}</p>
+            {% endif %}
+        {% endfor %}
+
+        {{ fantasy.age }}
 
     </div>
 {% endblock %}
